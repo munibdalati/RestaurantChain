@@ -5,25 +5,7 @@ const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "3d" });
 };
 
-// --------------------get all application --------------------
-exports.getAllApplication = async (req, res) => {
-  try {
-    const applications = await Application.find();
-    res.status(200).json({
-      status: "success",
-      results: applications.length,
-      data: {
-        applications,
-      },
-    });
-  } catch (error) {
-    res.status(404).json({
-      status: "fail",
-      message: error.message,
-    });
-  }
-};
-// ----------------- create application -----------------
+// ----------------- create form 3 -----------------
 exports.createForm3 = async (req, res) => {
   const {
     startDate,

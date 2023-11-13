@@ -16,20 +16,18 @@ function BasicInformationForm() {
   const [restaurantName, setRestaurantName] = useState("");
   const [street, setStreet] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
-  const [openHour, setOpenHour] = useState("");
-  const [closeHour, setCloseHour] = useState("");
+  const [workingDays, setWorkingDays] = useState([]);
+  const [checkedDays, setCheckedDays] = useState({});
   const [landmark1, setLandmark1] = useState("");
   const [landmark2, setLandmark2] = useState("");
 
   const [error, setError] = useState("");
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const [workingDays, setWorkingDays] = useState([]);
 
 
   const daysOfWeek = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-  const [checkedDays, setCheckedDays] = useState({});
 
   // Function to handle checkbox changes
   const handleCheckboxChange = (day) => {
@@ -58,15 +56,14 @@ function BasicInformationForm() {
   };
 
 
-  const handleSubmit = async (e) => {
-    const form = e.currentTarget;
+  const handleSubmit = async (error) => {
+    const form = error.currentTarget;
     if (form.checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
+      error.preventDefault();
+      error.stopPropagation();
     }
-
     setValidated(true);
-    e.preventDefault();
+    error.preventDefault();
 
     const config = {
       headers: {
@@ -76,12 +73,14 @@ function BasicInformationForm() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/application/addApplication",
+        "http://localhost:8000/api/basicInfo/addForm1",
         {
           restaurantName,
           mobileNumber,
           street,
-          workingDays
+          workingDays,
+          landmark1,
+          landmark2
         },
         config
       );
@@ -90,17 +89,17 @@ function BasicInformationForm() {
       console.log(response.data);
 
       navigate("/MenuPage");
-    } catch (err) {
-      if (err.response) {
+    } catch (error) {
+      if (error.response) {
         // The request was made and the server responded with a status code
-        console.log(err.response.data); // This will print the error response from the server
-        setError(err.response.data.error);
-      } else if (err.request) {
+        console.log(error.response.data); // This will print the error response from the server
+        setError(error.response.data.error);
+      } else if (error.request) {
         // The request was made but no response was received
-        console.error("Request made, but no response received:", err.request);
+        console.error("Request made, but no response received:", error.request);
       } else {
         // Something happened in setting up the request
-        console.error("Error setting up the request:", err.message);
+        console.error("Error setting up the request:", error.message);
       }
 
       setTimeout(() => {
@@ -163,7 +162,7 @@ function BasicInformationForm() {
                 value={mobileNumber}
                 onChange={(value) => setMobileNumber(value)}
                 isInvalid={formSubmitted && !mobileNumber}
-                className="custom-phone-input" // Apply the CSS class here
+                className="custom-phone-input"
               />
               <Form.Control.Feedback type="invalid">
                 Please write a valid mobile Number
@@ -211,29 +210,32 @@ function BasicInformationForm() {
                       <td>
                         <input
                           type="checkbox"
-                          id={day}
-                          value={day}
-                          className="mx-2"
-                          onChange={() => handleCheckboxChange(day)}
+                            id={day}
+                            value={day}
+                            className="mx-2"
+                            checked={checkedDays[day]}
+                            onChange={() => handleCheckboxChange(day)}
                         />
                         <label htmlFor={day}>{day}</label>
                       </td>
                       <td>
-                        <input
-                          type="time"
-                          required
-                          disabled={!checkedDays[day]}
-                          onChange={(e) => handleTimeChange(day, 'openTime', e.target.value)}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="time"
-                          required
-                          disabled={!checkedDays[day]}
-                          onChange={(e) => handleTimeChange(day, 'closeTime', e.target.value)}
-                        />
-                      </td>
+                          <input
+                            type="time"
+                            required
+                            disabled={!checkedDays[day]}
+                            value={workingDays.find((item) => item.day === day)?.openTime || ''}
+                            onChange={(e) => handleTimeChange(day, 'openTime', e.target.value)}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="time"
+                            required
+                            disabled={!checkedDays[day]}
+                            value={workingDays.find((item) => item.day === day)?.closeTime || ''}
+                            onChange={(e) => handleTimeChange(day, 'closeTime', e.target.value)}
+                          />
+                        </td>
                     </tr>
                   ))}
                 </tbody>
@@ -272,11 +274,11 @@ function BasicInformationForm() {
               <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
             </Form.Group>
           </Row>
-          <Button type="submit" className="Careerly__btn">
+          <Button type="submit" className="Food__btn">
             Submit form
           </Button>
           <Link to={"/MenuPage"}>
-            <Button className="Careerly__btn">Next</Button>
+            <Button className="Food__btn">Next</Button>
           </Link>
         </Form>
       </Col>

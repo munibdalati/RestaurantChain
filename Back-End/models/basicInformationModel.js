@@ -2,14 +2,10 @@ const mongoose = require("mongoose");
 
 const form1Schema = new mongoose.Schema(
   {
-    userId: {
-      type: String,
-      required: true,
-      unique: true
-    },
     restaurantName: {
       type: String,
       required: true,
+      unique: true
     },
     street: {
       type: String,
@@ -19,12 +15,8 @@ const form1Schema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    openHour: {
-      type: Number,
-      required: true,
-    },
-    closeHour: {
-      type: Number,
+    workingDays: {
+      type: Array,
       required: true,
     },
     landmark1: {
@@ -35,7 +27,6 @@ const form1Schema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
   },
   { timestamps: true }
 );
@@ -44,20 +35,17 @@ form1Schema.statics.addForm1 = async function (
   restaurantName,
   street,
   mobileNumber,
-  openHour,
-  closeHour,
+  workingDays,
   landmark1,
-  landmark2,
-
+  landmark2
 ) {
   const form1 = await this.create({
     restaurantName,
     street,
     mobileNumber,
-    openHour,
-    closeHour,
+    workingDays,
     landmark1,
-    landmark2,
+    landmark2
   });
 
   return form1;

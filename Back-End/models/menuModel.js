@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const form2Schema = new mongoose.Schema(
   {
     meals: {
-      type: String,
+      type: Array,
       required: true,
     }
   },

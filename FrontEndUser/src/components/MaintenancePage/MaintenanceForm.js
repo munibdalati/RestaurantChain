@@ -40,7 +40,7 @@ function MaintenanceForm() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/application/addApplication",
+        "http://localhost:8000/api/maintenance/addForm3",
         {
           startDate,
           endDate,
@@ -54,7 +54,7 @@ function MaintenanceForm() {
       console.log(response.data.token);
       console.log(response.data);
 
-      navigate("/MenuPage");
+      navigate("/Confirmation");
     } catch (err) {
       if (err.response) {
         // The request was made and the server responded with a status code
@@ -78,7 +78,7 @@ function MaintenanceForm() {
 
   useEffect(() => {
     if (localStorage.getItem("auth_token")) {
-      navigate("/MenuPage");
+      navigate("/Confirmation");
     }
   }, []);
 
@@ -168,7 +168,6 @@ function MaintenanceForm() {
               >
                 <Form.Label>Comments</Form.Label>
                 <Form.Control
-                  required
                   as="textarea"
                   rows={3}
                   placeholder="Enter your comments"
@@ -178,12 +177,9 @@ function MaintenanceForm() {
                 />
               </Form.Group>
             </Row>
-            <Button type="submit" className="Careerly__btn">
+            <Button type="submit" className="Food__btn">
               Submit form
             </Button>
-            <Link to={"/MenuPage"}>
-              <Button className="Careerly__btn">Back</Button>
-            </Link>
           </Form>
         </Col>
         <Col md="2"></Col>

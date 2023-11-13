@@ -15,7 +15,7 @@ function Footer() {
   return (
     <Container className="footer">
       <Row
-        className="align-items-center text-center justify-content-center"
+        className="align-items-center text-center justify-content-center footer__row"
         style={{ paddingBottom: 30, paddingTop: 30 }}
       >
         <Col>

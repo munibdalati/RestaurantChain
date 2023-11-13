@@ -13,12 +13,11 @@ import { Link } from "react-router-dom";
 
 function MenuForm() {
   const [validated, setValidated] = useState(false);
-
-
   const [error, setError] = useState("");
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   const [meals, setMeals] = useState([]);
+  const [checkedMeals, setCheckedMeals] = useState({});
 
 
   const menuItems = [
@@ -42,7 +41,6 @@ function MenuForm() {
     "Teriyaki Bowl",
     "Spinach Curry"
   ];
-  const [checkedMeals, setCheckedMeals] = useState({});
 
   // Function to handle checkbox changes
   const handleCheckboxChange = (meal) => {
@@ -52,17 +50,16 @@ function MenuForm() {
     }));
   };
 
-  // Function to handle time input changes
   const handleTimeChange = (meal, type, value) => {
-    setMeals((mealsTime) => {
-      const updatedMeals = [...mealsTime];
+    setMeals((prevMeals) => {
+      const updatedMeals = [...prevMeals];
       const mealIndex = updatedMeals.findIndex((item) => item.meal === meal);
 
       if (mealIndex !== -1) {
-        // Update existing day
+        // Update existing meal
         updatedMeals[mealIndex][type] = value;
       } else {
-        // Add new day
+        // Add new meal
         updatedMeals.push({ meal, openTime: "", closeTime: "" });
       }
 
@@ -70,16 +67,15 @@ function MenuForm() {
     });
   };
 
-
-  const handleSubmit = async (e) => {
-    const form = e.currentTarget;
+  const handleSubmit = async (error) => {
+    const form = error.currentTarget;
     if (form.checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
+      error.preventDefault();
+      error.stopPropagation();
     }
 
     setValidated(true);
-    e.preventDefault();
+    error.preventDefault();
 
     const config = {
       headers: {
@@ -89,7 +85,7 @@ function MenuForm() {
 
     try {
       const response = await axios.post(
-        "https://job-app-api-alpha.vercel.app/api/application/addApplication",
+        "http://localhost:8000/api/menu/addForm2",
         {
           meals
         },
@@ -99,18 +95,18 @@ function MenuForm() {
       console.log(response.data.token);
       console.log(response.data);
 
-      navigate("/Confirmation");
-    } catch (err) {
-      if (err.response) {
+      navigate("/MaintenancePage");
+    } catch (error) {
+      if (error.response) {
         // The request was made and the server responded with a status code
-        console.log(err.response.data); // This will print the error response from the server
-        setError(err.response.data.error);
-      } else if (err.request) {
+        console.log(error.response.data); // This will print the error response from the server
+        setError(error.response.data.error);
+      } else if (error.request) {
         // The request was made but no response was received
-        console.error("Request made, but no response received:", err.request);
+        console.error("Request made, but no response received:", error.request);
       } else {
         // Something happened in setting up the request
-        console.error("Error setting up the request:", err.message);
+        console.error("Error setting up the request:", error.message);
       }
 
       setTimeout(() => {
@@ -123,7 +119,7 @@ function MenuForm() {
 
   useEffect(() => {
     if (localStorage.getItem("auth_token")) {
-      navigate("/Confirmation");
+      navigate("/MaintenancePage");
     }
   }, []);
 
@@ -133,59 +129,57 @@ function MenuForm() {
         <Col md="2"></Col>
         <Col md="8">
           <h4 className="mb-5">Step 2: Menu Form</h4>
-          <Form.Group as={Col} md="12" controlId="validationCustom05" className="mb-3">
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th style={{ width: "40%" }}>Meal</th>
-                  <th style={{ width: "30%" }}>Start Serving Time</th>
-                  <th style={{ width: "30%" }}>End Serving Time</th>
-                </tr>
-              </thead>
-              <tbody>
-                {menuItems.map((meal) => (
-                  <tr key={meal}>
-                    <td>
-                      <input
-                        type="checkbox"
-                        id={meal}
-                        value={meal}
-                        className="mx-2"
-                        onChange={() => handleCheckboxChange(meal)}
-                      />
-                      <label htmlFor={meal}>{meal}</label>
-                    </td>
-                    <td>
-                      <input
-                        type="time"
-                        required
-                        disabled={!checkedMeals[meal]}
-                        onChange={(e) => handleTimeChange(meal, 'openTime', e.target.value)}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="time"
-                        required
-                        disabled={!checkedMeals[meal]}
-                        onChange={(e) => handleTimeChange(meal, 'closeTime', e.target.value)}
-                      />
-                    </td>
+          <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            <Form.Group as={Col} md="12" controlId="validationCustom05" className="mb-3">
+              <table className="table table-bordered">
+                <thead>
+                  <tr>
+                    <th style={{ width: "40%" }}>Meal</th>
+                    <th style={{ width: "30%" }}>Start Serving Time</th>
+                    <th style={{ width: "30%" }}>End Serving Time</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-            <Button type="submit" className="Careerly__btn">
-              Submit form
-            </Button>
-            <Link to={"/BasicInformationPage"}>
-              <Button className="Careerly__btn">Back</Button>
-            </Link>
-            <Link to={"/MaintenancePage"}>
-              <Button className="Careerly__btn">Next</Button>
-            </Link>         
-          </Form.Group>
-
+                </thead>
+                <tbody>
+                  {menuItems.map((meal) => (
+                    <tr key={meal}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          id={meal}
+                          value={meal}
+                          className="mx-2"
+                          checked={checkedMeals[meal]}
+                          onChange={() => handleCheckboxChange(meal)}
+                        />
+                        <label htmlFor={meal}>{meal}</label>
+                      </td>
+                      <td>
+                        <input
+                          type="time"
+                          required
+                          disabled={!checkedMeals[meal]}
+                          value={meals.find((item) => item.meal === meal)?.openTime || ''}
+                          onChange={(e) => handleTimeChange(meal, 'openTime', e.target.value)}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="time"
+                          required
+                          disabled={!checkedMeals[meal]}
+                          value={meals.find((item) => item.meal === meal)?.closeTime || ''}
+                          onChange={(e) => handleTimeChange(meal, 'closeTime', e.target.value)}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <Button type="submit" className="Food__btn">
+                Submit form
+              </Button>
+            </Form.Group>
+          </Form>
         </Col>
         <Col md="2"></Col>
       </Row>

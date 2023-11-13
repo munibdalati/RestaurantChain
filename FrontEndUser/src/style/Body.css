@@ -1,15 +1,5 @@
 :root {
   --primarycolor: #79AC78;
-  --secondarycolor: #019147;
-  --thirdcolor: #646464;
-  --black: #121413;
-  --button: #ff9822;
-  --hover: #8a8a8a;
-  --transition: 0.5s;
-  --padding: 5px;
-  --margin: 25px auto;
-  --font-size: 1rem;
-  --heading-size: 1.5rem;
 }
 .btn-orange {
     background-color: var(--primarycolor);
@@ -21,20 +11,23 @@
   border-color: #000;
   color: var(--primarycolor);
 }
-
-
 .first__col {
   padding: 0 5%;
 }
-
-.Careerly__btn {
+.Food__btn {
   background-color: #f7ebe7;
   border-color: var(--primarycolor);
   color: var(--primarycolor);
 }
-.Careerly__btn:hover {
+.Food__btn:hover {
   background-color: var(--primarycolor);
   color: #f7ebe7;
+}
+
+@media screen and (max-width: 425px) {
+  .body__row {
+    flex-direction: column;
+  }
 }
 
 

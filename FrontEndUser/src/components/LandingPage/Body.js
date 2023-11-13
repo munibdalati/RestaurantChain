@@ -14,7 +14,7 @@ function Body() {
   }
   return (
     <Container>
-      <Row className="align-items-center mt-5">
+      <Row className="align-items-center mt-5 body__row">
         <Col className="first__col d-flex flex-column align-items-center text-center">
           <h1>
             Open your restaurant and join our amazing Chain

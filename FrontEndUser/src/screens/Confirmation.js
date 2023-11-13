@@ -26,9 +26,9 @@ function Confirmation() {
     <div style={containerStyle}>
       <NavComponent />
       <div style={contentStyle}>
-        <h2>Your Job Application have been saved successfully</h2>
+        <h2>Your Application have been saved successfully</h2>
         <Link to={"/"}>
-          <Button className="Careerly__btn">Return to Home Page</Button>
+          <Button className="Food__btn">Return to Home Page</Button>
         </Link>
       </div>
       <Footer />
