@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const form1Schema = new mongoose.Schema(
   {
+    userId: {
+      type: String,
+      required: true,
+      unique: true
+    },
     restaurantName: {
       type: String,
       required: true,
