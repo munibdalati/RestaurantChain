@@ -277,9 +277,6 @@ function BasicInformationForm() {
           <Button type="submit" className="Food__btn">
             Submit form
           </Button>
-          <Link to={"/MenuPage"}>
-            <Button className="Food__btn">Next</Button>
-          </Link>
         </Form>
       </Col>
 
